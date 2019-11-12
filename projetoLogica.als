@@ -1,27 +1,40 @@
 module projetoLogica
-
-one abstract sig SistemaCartoes{}
-
-sig CartaoBloqueado in SistemaCartoes {}
-sig CartaoDesbloqueado in Sistema Cartoes{}
-sig QuartoAlugado in SistemaCartoes{}
-
 one sig Hotel{
 	sistemaCartoes: one SistemaCartoes,
 	gerente: one Gerente,
-	quarto: some Quarto
 }
-
 sig Gerente{
 }
 
+one sig SistemaCartoes{
+	quartos: some Quarto
+}
 sig Quarto{
-	cartao: some Cartao,
-	numero: Int
+	cartoes: some Cartao
 }
 
-sig Cartao{
+abstract sig Cartao{
 	numero: Int
 }
+sig CartaoBloqueado extends Cartao {}
+sig CartaoDesbloqueado extends Cartao{}
 
-fact{all q:Quarto | #(q.cartao) < 4}
+
+
+
+
+
+
+
+
+
+fact {
+	all q:Quarto | #(q.cartoes) < 4
+	all c:Cartao | one c.~cartoes
+	all s:SistemaCartoes | some s.quartos
+	all q:Quarto | one q.~quartos
+}
+
+pred show[]{
+}
+run show for 6
